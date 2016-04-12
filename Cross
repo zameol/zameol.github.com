@@ -1,0 +1,42 @@
+function [trainTime,testTime,trainAccuracy,testingAccuracy] = myCode(data,v,num,fun)
+v=10;
+step=floor(size(data,1)/v);
+for i =1:v
+    if i~= v
+        startpoint=(i-1)*step+1;
+        endpoint=(i)*step;
+    else
+        startpoint=(i-1)*step+1;
+        endpoint=size(data,1);
+    end
+    cv_p=startpoint:endpoint; %%%% test set position
+    
+    %%%%%%%%%%%%%% test set
+     Test_data=data(cv_p,:);
+     TestData{i} = Test_data; 
+    %%%%%%%%%%%%%% training data
+     Train_data=data;
+     Train_data(cv_p,:)=[];       
+     TrainData{i} = Train_data;
+end
+TrainTime = zeros(1,10);
+TestTime = zeros(1,10);
+TrainAccuracy = zeros(1,10);
+TestAccuracy = zeros(1,10);
+for i = 1 : v
+
+[TrainingTime, TestingTime, TrainingAccuracy, TestingAccuracy,InputWeight,BiasofHiddenNeurons,OutputWeight] = ELM(TrainData{i}, TestData{i}, 1, num, fun)
+inputWeight{i} = InputWeight;
+biasofHiddenNeurons{i} =BiasofHiddenNeurons;
+outputWeight{i} = OutputWeight;
+TrainTime(1,i) = TrainingTime;
+TestTime(1,i) = TestingTime;
+TrainAccuracy(1,i) = TrainingAccuracy;
+TestAccuracy(1,i) = TestingAccuracy;
+end
+
+% trainTime = mmin(TrainTime)
+% testTime = mean(TestTime)
+% trainAccuracy = mean(TrainAccuracy)
+%testingAccuracy = max(TestAccuracy)
+end
